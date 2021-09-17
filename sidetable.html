@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <title>Object Detection</title>
+    </head>
+
+    <body background="https://st.hzcdn.com/simgs/pictures/living-rooms/bernix-marble-coffee-table-cube-calacatta-gold-bernix-furniture-design-img~37810fc60d4ffa2a_4-8644-1-0512a75.jpg">
+        <center>
+        <h1  class="btn">Smart Phone Detection </h1>  
+        <br>
+        <br> 
+        <h3 id="status" class="btn btn-danger"></h3>
+        <br>
+        <h3 class="btn btn-success">There are four big objects in the image from which cocossd model has detected 1 object </h3>
+        <a href="index.html" class="btn">Back</a>
+
+        <style>
+            body
+{
+    background-position: center;
+    background-size: cover;
+}
+        </style>
+
+        
+    </center>
+    <script>
+img = "";
+status = "";
+objects = [];
+objectDetector = "";
+
+function preload(){
+    img = loadImage('https://st.hzcdn.com/simgs/pictures/living-rooms/bernix-marble-coffee-table-cube-calacatta-gold-bernix-furniture-design-img~37810fc60d4ffa2a_4-8644-1-0512a75.jpg');
+}
+
+
+function setup(){
+    canvas = createCanvas(540, 370);
+    canvas.center();
+    objectDetector = ml5.objectDetector('cocossd', modelLoaded);
+    document.getElementById("status").innerHTML = "Status : Detecting Objects";
+}
+
+function draw(){
+    image(img, 0, 0, 640, 420);
+
+    if(status != "" )
+    {
+        for(i = 0; i < objects.length; i++)
+        {
+            document.getElementById("status").innerHTML = "Status : Object Detected ";
+
+            fill("#FF0000");
+            percent = floor(objects[i].confidence * 100);
+            text(objects[i].label + "" + percent + "%", objects[i].x + 15, objects[i].y + 150);
+            noFill();
+            stroke("#FF0000");
+            rect(objects[i].x, objects[i].y, objects[i].width, objects[i].height);
+        }
+    }
+
+
+    
+
+
+
+}
+
+
+function modelLoaded(){
+    console.log('Model Loaded');
+    status = true;
+    objectDetector.detect(img, gotResult);
+}
+
+function gotResult(error, results){
+    if(error) {
+        console.log(error)
+    }
+    console.log(results);
+    objects = results;
+}
+
+
+
+
+    </script>
+    </body>
+
+
+</html>
